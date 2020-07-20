@@ -1,0 +1,17 @@
+C:\Users\Dell\Desktop\ntcDbManager\DbManager\DbManager\DbManager\bin\Release\DbManager.exe.config
+C:\Users\Dell\Desktop\ntcDbManager\DbManager\DbManager\DbManager\bin\Release\DbManager.exe
+C:\Users\Dell\Desktop\ntcDbManager\DbManager\DbManager\DbManager\bin\Release\DbManager.pdb
+C:\Users\Dell\Desktop\ntcDbManager\DbManager\DbManager\DbManager\bin\Release\CredentialManagement.dll
+C:\Users\Dell\Desktop\ntcDbManager\DbManager\DbManager\DbManager\bin\Release\Meziantou.Framework.Win32.CredentialManager.dll
+C:\Users\Dell\Desktop\ntcDbManager\DbManager\DbManager\DbManager\bin\Release\Meziantou.Framework.Win32.CredentialManager.pdb
+C:\Users\Dell\Desktop\ntcDbManager\DbManager\DbManager\DbManager\obj\Release\DbManager.csprojAssemblyReference.cache
+C:\Users\Dell\Desktop\ntcDbManager\DbManager\DbManager\DbManager\obj\Release\DbManager.View.DatabaseDetailsForm.resources
+C:\Users\Dell\Desktop\ntcDbManager\DbManager\DbManager\DbManager\obj\Release\DbManager.DatabasesList.resources
+C:\Users\Dell\Desktop\ntcDbManager\DbManager\DbManager\DbManager\obj\Release\DbManager.View.DownloadSelectedVersion.resources
+C:\Users\Dell\Desktop\ntcDbManager\DbManager\DbManager\DbManager\obj\Release\DbManager.Form1.resources
+C:\Users\Dell\Desktop\ntcDbManager\DbManager\DbManager\DbManager\obj\Release\DbManager.Properties.Resources.resources
+C:\Users\Dell\Desktop\ntcDbManager\DbManager\DbManager\DbManager\obj\Release\DbManager.UploadNewVersion.resources
+C:\Users\Dell\Desktop\ntcDbManager\DbManager\DbManager\DbManager\obj\Release\DbManager.csproj.GenerateResource.cache
+C:\Users\Dell\Desktop\ntcDbManager\DbManager\DbManager\DbManager\obj\Release\DbManager.csproj.CopyComplete
+C:\Users\Dell\Desktop\ntcDbManager\DbManager\DbManager\DbManager\obj\Release\DbManager.exe
+C:\Users\Dell\Desktop\ntcDbManager\DbManager\DbManager\DbManager\obj\Release\DbManager.pdb

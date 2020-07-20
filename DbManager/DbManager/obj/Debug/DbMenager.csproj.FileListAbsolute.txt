@@ -1,0 +1,10 @@
+C:\Users\Dell\Desktop\ntc\DbMenager\DbMenager\DbMenager\bin\Debug\DbMenager.exe.config
+C:\Users\Dell\Desktop\ntc\DbMenager\DbMenager\DbMenager\bin\Debug\DbMenager.exe
+C:\Users\Dell\Desktop\ntc\DbMenager\DbMenager\DbMenager\bin\Debug\DbMenager.pdb
+C:\Users\Dell\Desktop\ntc\DbMenager\DbMenager\DbMenager\obj\Debug\DbMenager.csprojAssemblyReference.cache
+C:\Users\Dell\Desktop\ntc\DbMenager\DbMenager\DbMenager\obj\Debug\DbMenager.Form1.resources
+C:\Users\Dell\Desktop\ntc\DbMenager\DbMenager\DbMenager\obj\Debug\DbMenager.Properties.Resources.resources
+C:\Users\Dell\Desktop\ntc\DbMenager\DbMenager\DbMenager\obj\Debug\DbMenager.csproj.GenerateResource.cache
+C:\Users\Dell\Desktop\ntc\DbMenager\DbMenager\DbMenager\obj\Debug\DbMenager.exe
+C:\Users\Dell\Desktop\ntc\DbMenager\DbMenager\DbMenager\obj\Debug\DbMenager.pdb
+C:\Users\Dell\Desktop\ntc\DbMenager\DbMenager\DbMenager\obj\Debug\DbMenager.DatabasesList.resources

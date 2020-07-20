@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29609.76
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbManager", "DbManager\DbManager.csproj", "{9BCF0A96-A3BF-4D73-BF10-AD65DC488909}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ntcUnitTestProject", "ntcUnitTestProject\ntcUnitTestProject.csproj", "{5D59B2E1-4391-4247-AF9B-9582238908B7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9BCF0A96-A3BF-4D73-BF10-AD65DC488909}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BCF0A96-A3BF-4D73-BF10-AD65DC488909}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BCF0A96-A3BF-4D73-BF10-AD65DC488909}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BCF0A96-A3BF-4D73-BF10-AD65DC488909}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D59B2E1-4391-4247-AF9B-9582238908B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D59B2E1-4391-4247-AF9B-9582238908B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D59B2E1-4391-4247-AF9B-9582238908B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D59B2E1-4391-4247-AF9B-9582238908B7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CD03D848-7B9C-4BAC-B00D-74C39E08167E}
+	EndGlobalSection
+EndGlobal
