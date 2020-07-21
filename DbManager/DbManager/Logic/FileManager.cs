@@ -46,12 +46,11 @@ namespace DbManager.Logic
                 {
                     if (!IsTheSameSize(sourcePath, targetFilePath))
                     {
-                        Clean(tmpFilePath, targetFilePath);
+                        Clean(targetFilePath);
                     }
                 }
                 if (IsTheSameSize(sourcePath, targetFilePath))
                 {
-
                     ProcessingFinishedDelegate?.Invoke(true, null);
                 }
                 var path = await FileTransfer(sourcePath, targetFilePath, checksum, tmpFilePath, targetFilePath, true, cancellationToken);
@@ -61,19 +60,17 @@ namespace DbManager.Logic
                 ProcessingFinishedDelegate?.Invoke(false, ex);
             }
         }
-
         public async Task<string> Upload(string sourcePath, string targetFilePath, string checksum, bool resumeUpload,
             CancellationToken? cancellationToken = null)
         {
-
-            var tmpFilePath = Properties.Settings.Default.NetworkPath + @"\DD_Test\" + Path.GetFileName("tmpFile.txt");
+            var tmpFilePath = _networkPathInfo.GetPathMetaDataFile();
             targetFilePath = GetFileName(sourcePath);
             string targetPath = GetFileName(sourcePath);
             try
             {
                 if (!IsTheSameSize(sourcePath, targetFilePath) || !resumeUpload)
                 {
-                    Clean(tmpFilePath, targetFilePath);
+                    Clean(targetFilePath);
                 }
 
                 if (IsTheSameSize(sourcePath, targetFilePath))
@@ -117,7 +114,7 @@ namespace DbManager.Logic
                         File.SetAttributes(targetPath, File.GetAttributes(targetPath) | FileAttributes.Hidden);
                         _sizeOfFile = sourceStream.Length;
 
-                        using (new System.Threading.Timer(FormStatusUpdate, null, 2000, 1000))
+                        using (new System.Threading.Timer(FormStatusUpdate, null, 1000, 1000))
                         {
                             while ((readBytes = await sourceStream.ReadAsync(buffer, 0, buffer.Length)) > 0)
                             {
@@ -141,7 +138,7 @@ namespace DbManager.Logic
                     else
                     {
                         File.Delete(targetFilePath);
-                        File.Delete(tmpFilePath);
+                        DeleteRowFromMetaDataFile(checksum);
                     }
                     ProcessingFinishedDelegate?.Invoke(false, ex);
                 }
@@ -156,8 +153,7 @@ namespace DbManager.Logic
             _totalBytesPrev = _totalBytes;
         }
         private async Task<string> ResumeFileTransfer(string sourcePath, string targetFilePath, long totalBytes, string tmpFilePath, string checksum,
-            CancellationToken? cancellationToken = null
-            )
+            CancellationToken? cancellationToken = null)
         {
             var credentials = _userAccessCredentials.ReadCredentials();
             using (var connection = _networkConnection.Connect(_networkPathInfo.GetNetworkPath(), credentials.Login, credentials.Password))
@@ -196,7 +192,7 @@ namespace DbManager.Logic
                             await targetStream.WriteAsync(buffer, 0, readBytes);
                             _totalBytes += readBytes;
                         }
-                        File.Delete(tmpFilePath);
+                        DeleteRowFromMetaDataFile(checksum);
                         File.SetAttributes(targetFilePath, File.GetAttributes(targetFilePath) & ~FileAttributes.Hidden);
                         ProcessingFinishedDelegate?.Invoke(true, null);
                         return targetFilePath;
@@ -210,31 +206,42 @@ namespace DbManager.Logic
                 return string.Empty;
             }
         }
-        public bool CheckInfoFileIsAlreadyDownloaded(string pathToFile)
+        public bool CheckInfoFileIsAlreadyDownloaded(string pathToFile, string checksum)
         {
-            FileInfo fInfo = new FileInfo(pathToFile + @"\\" + Path.GetFileName("tmpFile.txt"));
+            var tmpFilePath = _networkPathInfo.GetPathMetaDataFile();
+            FileInfo fInfo = new FileInfo(tmpFilePath);
             if (fInfo.Exists)
             {
-                return true;
+                using (StreamReader sourceStream = new StreamReader(tmpFilePath))
+                {
+                    string[] data = null;
+                    string line = null;
+                    while ((line = sourceStream.ReadLine()) != null)
+                    {
+                        data = line.Split(';').ToArray();
+                        if (checksum.Equals(data[0]))
+                            return true;
+                    }
+                    sourceStream.Close();
+                }
             }
             return false;
         }
         private long GetTotalBytes(string tmpFilePath, string checksum, long totalBytes)
         {
-            var metadataDownloadedFile = LoadFileInfo(tmpFilePath);
+            var metadataDownloadedFile = LoadFileInfo(tmpFilePath, checksum);
             if (metadataDownloadedFile != null)
             {
                 if (!checksum.Equals(metadataDownloadedFile[0]))
                     throw new Exception();
                 totalBytes = long.Parse(metadataDownloadedFile[1]);
             }
-
             return totalBytes;
         }
         private string GetFileName(string pathToFile)
         {
             var fileName = Path.GetFileName(pathToFile);
-            string NetworkPath = Properties.Settings.Default.NetworkPath + @"\DD_Test\";
+            string NetworkPath = _networkPathInfo.GetPathNeworkDirectory();
 
             fileName = NetworkPath + fileName;
 
@@ -255,17 +262,13 @@ namespace DbManager.Logic
                 stringToSubstring = stringToSubstring.Substring(0, index);
 
             return stringToSubstring;
-
         }
         public void SaveFileInfo(string checksum, long totalBytes, string targetPath)
         {
-            string dataString = checksum + ";" + totalBytes;
-            if (File.Exists(targetPath))
-                File.SetAttributes(targetPath, File.GetAttributes(targetPath) & ~FileAttributes.Hidden);
-            File.WriteAllText(targetPath, dataString);
-            File.SetAttributes(targetPath, File.GetAttributes(targetPath) | FileAttributes.Hidden);
+            string dataString = $"{checksum};{totalBytes};{DateTime.Now.ToShortDateString()}\n";
+            File.AppendAllText(targetPath, dataString);
         }
-        public string[] LoadFileInfo(string targetFile)
+        public string[] LoadFileInfo(string targetFile, string checksum)
         {
             string[] data = null;
             FileInfo fInfo = new FileInfo(targetFile);
@@ -275,8 +278,13 @@ namespace DbManager.Logic
                 {
                     using (StreamReader sourceStream = new StreamReader(targetFile))
                     {
-                        var line = sourceStream.ReadLine();
-                        data = line.Split(';').ToArray();
+                        string line = null;
+                        while((line = sourceStream.ReadLine()) != null)
+                        {
+                            data = line.Split(';').ToArray();
+                            if (checksum.Equals(data[0]))
+                                return data;
+                        }
                         sourceStream.Close();
                     }
                 }
@@ -285,24 +293,11 @@ namespace DbManager.Logic
                     MessageBox.Show(ex.ToString());
                 }
             }
-            return data;
+            return null;
         }
-        public void Clean(string tmpFilePath, string targetFilePath)
+        public void Clean(string targetFilePath)
         {
-            FileInfo tmpFile = new FileInfo(tmpFilePath);
             FileInfo targetFile = new FileInfo(targetFilePath);
-
-            if (tmpFile.Exists)
-            {
-                try
-                {
-                    tmpFile.Delete();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.ToString());
-                }
-            }
             if (targetFile.Exists)
             {
                 try
@@ -336,7 +331,7 @@ namespace DbManager.Logic
 
                 if (!IsTheSameSize(sourceFilePath, targetFilePath) && !resumeDownload)
                 {
-                    Clean(tmpFilePath, targetFilePath);
+                    Clean(targetFilePath);
                 }
 
                 if (IsTheSameSize(sourceFilePath, targetFilePath))
@@ -350,12 +345,11 @@ namespace DbManager.Logic
                 ProcessingFinishedDelegate?.Invoke(false, ex);
             }
         }
-
         public async Task<string> ResumeUpload(string sourcePath, string targetFilePath, string checksum,
             bool resumeUpload, CancellationToken? cancellationToken = null)
         {
             long totalBytes = 0;
-            string tmpFilePath = targetFilePath + @"\\" + Path.GetFileName("tmpFile.txt");
+            string tmpFilePath = _networkPathInfo.GetPathMetaDataFile();
             targetFilePath = targetFilePath + @"\\" + Path.GetFileName(sourcePath);
 
             try
@@ -363,7 +357,7 @@ namespace DbManager.Logic
                 totalBytes = GetTotalBytes(tmpFilePath, checksum, totalBytes);
                 if (!IsTheSameSize(sourcePath, targetFilePath) && !resumeUpload)
                 {
-                    Clean(tmpFilePath, targetFilePath);
+                    Clean(targetFilePath);
                 }
 
                 if (IsTheSameSize(sourcePath, targetFilePath))
@@ -381,19 +375,91 @@ namespace DbManager.Logic
         }
         public void DeleteIncomplitedOldFiles()
         {
-            var pathToFolder = _networkPathInfo.GetNetworkPath() + @"/DD_Test";
-            DirectoryInfo directory = new DirectoryInfo(pathToFolder);
-            FileInfo[] files = directory.GetFiles("*.db");
-            foreach (var file in files)
+            try
             {
-                var path = Path.GetFullPath(file.FullName);
-                if (File.GetAttributes(path).HasFlag(FileAttributes.Hidden))
+                int timeOfDeprecated = 10;
+                var pathToFolder = _networkPathInfo.GetPathNeworkDirectory();
+
+                DirectoryInfo directory = new DirectoryInfo(pathToFolder);
+                FileInfo[] files = directory.GetFiles("*.db");
+                foreach (var file in files)
                 {
-                    DateTime startDate = File.GetLastWriteTime(path);
-                    DateTime endDate = DateTime.Now;
-                    if((endDate - startDate).TotalDays > 7)
-                        File.Delete(path);
+                    var path = Path.GetFullPath(file.FullName);
+                    if (File.GetAttributes(path).HasFlag(FileAttributes.Hidden))
+                    {
+                        DateTime startDate = File.GetLastWriteTime(path);
+                        DateTime endDate = DateTime.Now;
+                        if ((endDate - startDate).TotalDays > timeOfDeprecated)
+                            File.Delete(path);
+                    }
                 }
+                if (File.Exists(pathToFolder))
+                {
+                    var targetFile = _networkPathInfo.GetPathMetaDataFile();
+                    string[] receivedData = null;
+                    string line;
+                    List<string> dataToSend = new List<string>();
+                    using (StreamReader sourceStream = new StreamReader(targetFile))
+                    {
+                        while ((line = sourceStream.ReadLine()) != null)
+                        {
+                            receivedData = line.Split(';').ToArray();
+                            var date = Convert.ToDateTime(receivedData[2]);
+                            if ((DateTime.Now - date).TotalDays <= timeOfDeprecated)
+                                dataToSend.Add(line);
+                        }
+                        sourceStream.Close();
+                    }
+                    using (StreamWriter targetStream = new StreamWriter(targetFile))
+                    {
+                        foreach (var lineToSend in dataToSend)
+                        {
+                            targetStream.Write(lineToSend);
+                        }
+                        targetStream.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+        }
+        private void DeleteRowFromMetaDataFile(string checksum)
+        {
+            try
+            {
+                var targetFile = _networkPathInfo.GetPathMetaDataFile();
+                if (File.Exists(targetFile))
+                {
+                    List<string> dataToSend = new List<string>();
+                    using (StreamReader sourceStream = new StreamReader(targetFile))
+                    {
+                        string[] receivedData = null;
+                        string line;
+                       
+                        while ((line = sourceStream.ReadLine()) != null)
+                        {
+                            receivedData = line.Split(';').ToArray();
+                            if (!receivedData[0].Equals(checksum))
+                                dataToSend.Add(line);
+                        }
+                        sourceStream.Close();
+                    }
+                    using (StreamWriter targetStream = new StreamWriter(targetFile))
+                    {
+                        foreach (var lineToSend in dataToSend)
+                        {
+                            targetStream.Write(lineToSend);
+                        }
+                        targetStream.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
     }

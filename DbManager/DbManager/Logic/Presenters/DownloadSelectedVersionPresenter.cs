@@ -3,6 +3,7 @@ using DbManager.Logic.Interfaces;
 using DbManager.Logic.Interfaces.ViewInterfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -56,7 +57,7 @@ namespace DbManager.Logic.Presenters
                 resumableFileManager.StatusChangedDelegate = DownloadStatusChangedHandler;
                 resumableFileManager.ProcessingFinishedDelegate = DownloadFinshedDelegateHandler;
 
-                if (resumableFileManager != null && resumableFileManager.CheckInfoFileIsAlreadyDownloaded(_pathToDownloadLoc))
+                if (resumableFileManager != null && File.Exists(_pathToDownloadLoc))
                 {
                     bool userDecision = _messageService.CheckUserWantsToResumeDownload();
                     if (userDecision)
@@ -109,7 +110,7 @@ namespace DbManager.Logic.Presenters
             using (_view = _formFactory.GetForm())
             {
                 BindCommands();
-                _view.Model = new Model.DownloadSelectedVersionModel();
+                _view.Model = new Model.DownloadSelectedVersionModel(_view.SynchronizationContext);
                 _cancellationTokenSource = new CancellationTokenSource();
                 ShowDialogSelectPath();
                 _view.ShowDialog();

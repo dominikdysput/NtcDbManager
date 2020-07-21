@@ -1,15 +1,10 @@
 ﻿using DbManager.Infrastructure;
 using DbManager.Logic.Interfaces;
 using DbManager.Logic.Interfaces.ViewInterfaces;
-using DbManager.Logic.Presenters;
-using DbManager.View;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -53,31 +48,7 @@ namespace DbManager.Logic.Presenters
         }
         private void BindCommands()
         {
-            _view.Upload = new BaseCommand(new Action(async () =>
-            {
-                if (_view.CheckTextboxesEmpty()) return;
-                try
-                {
-                    _resumableFileManager.ProcessingFinishedDelegate = UploadFinshedDelegateHandler;
-                    _resumableFileManager.ProgressbarChangedDelegate = UploadProgressChangedHandler;
-                    _resumableFileManager.StatusChangedDelegate = UpdateStatusChangedHandler;
-                    var targetFile = string.Empty;
-                    targetFile = await _resumableFileManager.Upload(_view.Model.PathToFile, _networkPath, string.Empty, false, _cancellationTokenSource.Token);
-                    if (!string.IsNullOrEmpty(targetFile))
-                    {
-                        var id = _metaData.WriteInfo(_view.Model.DatabaseName, _view.Model.Company, _view.Model.Tags);
-                        var checksumForNewFile = _checksum.CalculateChecksum(_view.Model.PathToFile);
-                        _metaData.WriteDetails(id, targetFile.ToString(), checksumForNewFile);
-                    }
-                    _view.ClearModel();
-                    LoadTable();
-                    _cancellationTokenSource = new CancellationTokenSource();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-            }));
+            _view.Upload = new AsyncCommand(UploadAction);
             _view.Find = new BaseCommand(new Action(() =>
             {
                 var tagsToCheck = _view.Model.FindByInput;
@@ -116,6 +87,32 @@ namespace DbManager.Logic.Presenters
                     MessageBox.Show(ex.Message);
                 }
             }));
+        }
+
+        private async Task UploadAction()
+        {
+            if (_view.CheckTextboxesEmpty()) return;
+            try
+            {
+                _resumableFileManager.ProcessingFinishedDelegate = UploadFinshedDelegateHandler;
+                _resumableFileManager.ProgressbarChangedDelegate = UploadProgressChangedHandler;
+                _resumableFileManager.StatusChangedDelegate = UpdateStatusChangedHandler;
+                var targetFile = string.Empty;
+                targetFile = await _resumableFileManager.Upload(_view.Model.PathToFile, _networkPath, string.Empty, false, _cancellationTokenSource.Token);
+                if (!string.IsNullOrEmpty(targetFile))
+                {
+                    var id = _metaData.WriteInfo(_view.Model.DatabaseName, _view.Model.Company, _view.Model.Tags);
+                    var checksumForNewFile = _checksum.CalculateChecksum(_view.Model.PathToFile);
+                    _metaData.WriteDetails(id, targetFile.ToString(), checksumForNewFile);
+                }
+                _view.ClearModel();
+                LoadTable();
+                _cancellationTokenSource = new CancellationTokenSource();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void UploadFinshedDelegateHandler(bool status, Exception exception)
         {
@@ -165,7 +162,7 @@ namespace DbManager.Logic.Presenters
                     _view.CloseDialog();
                     return null;
                 }
-                _view.Model = new Model.DatabasesListModel();
+                _view.Model = new Model.DatabasesListModel(_view.SynchronizationContext);
                 LoadTable();
                 BindCommands();
                 _resumableFileManager.DeleteIncomplitedOldFiles();

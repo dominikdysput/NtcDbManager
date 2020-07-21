@@ -21,11 +21,13 @@ namespace DbManager
     public partial class UploadNewVersion : Form, IUploadNewVersionView
     {
         private UploadNewVersionModel model;
+        public SynchronizationContext SynchronizationContext { get; }
         public UploadNewVersion()
         {
             InitializeComponent();
             progressBar2.Minimum = 0;
             progressBar2.Maximum = 100;
+            SynchronizationContext = SynchronizationContext.Current;
         }
         public UploadNewVersionModel Model
         {

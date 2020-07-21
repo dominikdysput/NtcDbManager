@@ -14,6 +14,6 @@ namespace DbManager.Logic
             CancellationToken? cancellationToken = null);
         Task Download(string sourcePath, string targetPath, string checksum, bool resumeDownload,
             CancellationToken? cancellationToken = null);
-        void Clean(string tmpFilePath, string targetFilePath);
+        void Clean(string targetFilePath);
     }
 }

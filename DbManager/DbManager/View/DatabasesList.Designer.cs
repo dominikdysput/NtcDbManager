@@ -107,8 +107,6 @@
             this.textBoxFindByInput.Name = "textBoxFindByInput";
             this.textBoxFindByInput.Size = new System.Drawing.Size(318, 20);
             this.textBoxFindByInput.TabIndex = 1;
-            this.textBoxFindByInput.TextChanged += new System.EventHandler(this.textBoxFindByInput_TextChanged);
-
             // 
             // comboBox1
             // 
@@ -163,7 +161,6 @@
             this.groupBox3.Size = new System.Drawing.Size(514, 353);
             this.groupBox3.TabIndex = 9;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = " ";
             // 
             // labelProcessing
             // 

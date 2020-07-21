@@ -17,5 +17,13 @@ namespace DbManager.Infrastructure
         {
             return Properties.Settings.Default.NetworkPath;
         }
+        public string GetPathMetaDataFile()
+        {
+            return Properties.Settings.Default.NetworkPath + @"\DD_Test\tmpFile.txt";
+        }
+        public string GetPathNeworkDirectory()
+        {
+            return Properties.Settings.Default.NetworkPath + @"\DD_Test\";
+        }
     }
 }

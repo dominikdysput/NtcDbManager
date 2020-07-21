@@ -30,7 +30,6 @@ namespace DbManager.View
             set
             {
                 model = value;
-                ClearBinding();
                 SetBindings();
             }
         }
@@ -43,13 +42,6 @@ namespace DbManager.View
             textBoxDbName.DataBindings.Add("Text", Model, nameof(DatabaseDetailsModel.DatabaseName), false, DataSourceUpdateMode.OnPropertyChanged, string.Empty);
             textBoxTags.DataBindings.Add("Text", Model, nameof(DatabaseDetailsModel.Tags), false, DataSourceUpdateMode.OnPropertyChanged, string.Empty);
             dataGridViewDetails.DataBindings.Add("DataSource", Model, nameof(DatabaseDetailsModel.DataTable), false, DataSourceUpdateMode.OnPropertyChanged, string.Empty);
-        }
-        private void ClearBinding()
-        {
-            textBoxCompany.DataBindings.Clear();
-            textBoxDbName.DataBindings.Clear();
-            textBoxTags.DataBindings.Clear();
-            dataGridViewDetails.DataBindings.Clear();
         }
         private void UploadDbButton_Click(object sender, EventArgs e)
         {

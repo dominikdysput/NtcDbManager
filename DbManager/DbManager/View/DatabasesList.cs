@@ -35,6 +35,7 @@ namespace DbManager
             InitializeComponent();
             progressBar1.Minimum = 0;
             progressBar1.Maximum = 100;
+            SynchronizationContext = SynchronizationContext.Current;
         }
         public DatabasesListModel Model
         {
@@ -46,9 +47,11 @@ namespace DbManager
             }
         }
         public ICommand PauseCommand { get; set; }
-        public ICommand Upload { get; set; }
+        public IAsyncCommand Upload { get; set; }
         public ICommand Find { get; set; }
         public ICommand GetInfoDatabaseCommand { get; set; }
+        public SynchronizationContext SynchronizationContext { get; }
+
         private void SetBindings()
         {
             textBoxCompany.DataBindings.Add("Text", Model, nameof(DatabasesListModel.Company), false, DataSourceUpdateMode.OnPropertyChanged, string.Empty);
@@ -69,7 +72,7 @@ namespace DbManager
             }
             return openFileDialog.FileName;
         }
-        private void buttonUpload_Click(object sender, EventArgs e)
+        private async void buttonUpload_Click(object sender, EventArgs e)
         {
             var pathToFile = ShowOpenFileDialog(openFileDialog1);
             if (!string.IsNullOrEmpty(pathToFile))
@@ -77,7 +80,7 @@ namespace DbManager
             Model.Company = textBoxCompany.Text;
             Model.DatabaseName = textBoxDbName.Text;
             Model.Tags = textBoxTags.Text;
-            Upload.Execute(null);
+            await Upload.Execute();
         }
         private void FindButton_Click(object sender, EventArgs e)
         {
@@ -135,13 +138,5 @@ namespace DbManager
         {
             Model.ComboboxSelectedItem = 0;
         }
-
-        private void textBoxFindByInput_TextChanged(object sender, EventArgs e)
-        {
-            
-            Model.FindByInput = textBoxFindByInput.Text;
-            Find.Execute(null);
-        }
-
     }
 }

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DbManager.Logic.Model
@@ -17,9 +18,20 @@ namespace DbManager.Logic.Model
         private string _tags;
         private string _pathToFile;
         private string _findByInput;
+        private readonly SynchronizationContext _ctx;
+        public DatabasesListModel()
+        {
+
+        }
+        public DatabasesListModel(SynchronizationContext ctx)
+        {
+            _ctx = ctx;
+        }
      
         private int _comboboxSelectedItem;
         private DataTable _dataTable;
+        
+
         public int StatusProgressbar { get => _statusProgressbar; set { _statusProgressbar = value; OnPropertyChange(nameof(StatusProgressbar)); } }
         public string DatabaseName { get => _databaseName; set { _databaseName = value; OnPropertyChange(nameof(DatabaseName)); } }
         public string PathToFile { get => _pathToFile; set { _pathToFile = value; OnPropertyChange(nameof(PathToFile)); } }
@@ -33,7 +45,14 @@ namespace DbManager.Logic.Model
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChange(string name)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            if (_ctx != null)
+            {
+                _ctx.Post((s) =>
+                {
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+                }, null);
+                return;
+            }
         }
     }
 }

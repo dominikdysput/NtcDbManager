@@ -25,6 +25,7 @@ namespace DbManager.View
             InitializeComponent();
             progressBar1.Minimum = 0;
             progressBar1.Maximum = 100;
+            SynchronizationContext = SynchronizationContext.Current;
         }
         public DownloadSelectedVersionModel Model
         {
@@ -35,6 +36,7 @@ namespace DbManager.View
                 SetBindings();
             }
         }
+        public SynchronizationContext SynchronizationContext { get; }
         private void SetBindings()
         {
             progressBar1.DataBindings.Add("Value", Model, nameof(DownloadSelectedVersionModel.StatusProgressbar), false, DataSourceUpdateMode.OnPropertyChanged, string.Empty);

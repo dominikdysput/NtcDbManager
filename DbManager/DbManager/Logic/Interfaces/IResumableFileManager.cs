@@ -19,9 +19,9 @@ namespace DbManager.Logic.Interfaces
         Task<string> ResumeUpload(string sourcePath, string targetFilePath, string checksum,
             bool resumeUpload,
             CancellationToken? cancellationToken = null);
-        bool CheckInfoFileIsAlreadyDownloaded(string pathToFile);
+        bool CheckInfoFileIsAlreadyDownloaded(string pathToFile, string checksum);
         void SaveFileInfo(string checksum, long totalBytes, string targetPath);
-        string[] LoadFileInfo(string targetFile);
+        string[] LoadFileInfo(string targetFile, string checksum);
         bool IsTheSameSize(string sourcePath, string targetFilePath);
         void DeleteIncomplitedOldFiles();
     }

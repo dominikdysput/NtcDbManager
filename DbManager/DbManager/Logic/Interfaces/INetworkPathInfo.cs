@@ -9,7 +9,8 @@ namespace DbManager.Logic.Interfaces
     public interface INetworkPathInfo
     {
         string GetCredentialsName();
-
+        string GetPathNeworkDirectory();
         string GetNetworkPath();
+        string GetPathMetaDataFile();
     }
 }

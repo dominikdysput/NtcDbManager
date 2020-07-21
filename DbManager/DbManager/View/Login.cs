@@ -26,11 +26,6 @@ namespace DbManager
         {
             InitializeComponent();
         }
-        private void ClearBindings()
-        {
-            textBoxLogin.DataBindings.Clear();
-            textBoxPassword.DataBindings.Clear();
-        }
         private void SetBindings()
         {
             textBoxLogin.DataBindings.Add("Text", Model, nameof(LoginModel.Username), false, DataSourceUpdateMode.OnPropertyChanged, string.Empty);
@@ -43,7 +38,6 @@ namespace DbManager
             get => model; 
             set {
                 model = value;
-                ClearBindings();
                 SetBindings();
             }
         }

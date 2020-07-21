@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Dell\\Desktop\\ntcDbManager\\DbManager\\DbManager\\DbManager\\DbManager.csproj": {}
+    "C:\\Users\\Dell\\Desktop\\ntcdb\\DbManager\\DbManager\\DbManager\\DbManager.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Dell\\Desktop\\ntcDbManager\\DbManager\\DbManager\\DbManager\\DbManager.csproj": {
+    "C:\\Users\\Dell\\Desktop\\ntcdb\\DbManager\\DbManager\\DbManager\\DbManager.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Dell\\Desktop\\ntcDbManager\\DbManager\\DbManager\\DbManager\\DbManager.csproj",
+        "projectUniqueName": "C:\\Users\\Dell\\Desktop\\ntcdb\\DbManager\\DbManager\\DbManager\\DbManager.csproj",
         "projectName": "DbManager",
-        "projectPath": "C:\\Users\\Dell\\Desktop\\ntcDbManager\\DbManager\\DbManager\\DbManager\\DbManager.csproj",
+        "projectPath": "C:\\Users\\Dell\\Desktop\\ntcdb\\DbManager\\DbManager\\DbManager\\DbManager.csproj",
         "packagesPath": "C:\\Users\\Dell\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Dell\\Desktop\\ntcDbManager\\DbManager\\DbManager\\DbManager\\obj\\",
+        "outputPath": "C:\\Users\\Dell\\Desktop\\ntcdb\\DbManager\\DbManager\\DbManager\\obj\\",
         "projectStyle": "PackageReference",
         "skipContentFileWrite": true,
         "configFilePaths": [

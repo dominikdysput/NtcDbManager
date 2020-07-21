@@ -68,7 +68,7 @@ namespace DbManager.Logic.Presenters
                 resumableFileManager.StatusChangedDelegate = UploadStatusChangedHandler;
                 resumableFileManager.ProcessingFinishedDelegate = UploadFinshedDelegateHandler;
 
-                if (resumableFileManager != null && resumableFileManager.CheckInfoFileIsAlreadyDownloaded(_networkPath))
+                if (resumableFileManager != null && resumableFileManager.CheckInfoFileIsAlreadyDownloaded(_networkPath, checksumForNewFile))
                 {
                     bool userDecision = _messageService.CheckUserWantsToResumeUpload();
                     if (userDecision)
@@ -133,7 +133,7 @@ namespace DbManager.Logic.Presenters
             using (_view = _formFactory.GetForm())
             {
                 BindCommands();
-                _view.Model = new Model.UploadNewVersionModel();
+                _view.Model = new Model.UploadNewVersionModel(_view.SynchronizationContext);
                 _cancellationTokenSource = new CancellationTokenSource();
                 ShowDialogSelectPath();
                 _view.ShowDialog();
