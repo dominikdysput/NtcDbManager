@@ -54,7 +54,7 @@
     <Compile Include="Infrastructure\AsyncCommand.cs" />
     <Compile Include="Infrastructure\BaseCommand.cs" />
     <Compile Include="Infrastructure\FormFactory.cs" />
-    <Compile Include="Infrastructure\IAsyncCommand.cs" />
+    <Compile Include="Logic\Interfaces\IAsyncCommand.cs" />
     <Compile Include="Infrastructure\IIoc.cs" />
     <Compile Include="Infrastructure\NetworkConnection.cs" />
     <Compile Include="Infrastructure\NetworkPathInfo.cs" />

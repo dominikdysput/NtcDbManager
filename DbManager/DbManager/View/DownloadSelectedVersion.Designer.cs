@@ -31,7 +31,6 @@
             this.labelStatus = new System.Windows.Forms.Label();
             this.buttonPause = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.labelProcessing = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -94,7 +93,6 @@
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.Button buttonPause;
         private System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.Label labelProcessing;
     }
 }

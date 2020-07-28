@@ -10,8 +10,6 @@ namespace DbManager.Infrastructure
 
         public event EventHandler CanExecuteChanged;
 
-
-
         public BaseCommand(Action action)
         {
             _action = action ?? throw new ArgumentNullException(nameof(action));

@@ -31,7 +31,6 @@
             this.labelStatus = new System.Windows.Forms.Label();
             this.progressBar2 = new System.Windows.Forms.ProgressBar();
             this.buttonStop = new System.Windows.Forms.Button();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.labelProcessing = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -60,10 +59,6 @@
             this.buttonStop.Text = "Stop";
             this.buttonStop.UseVisualStyleBackColor = true;
             this.buttonStop.Click += new System.EventHandler(this.buttonStop_Click);
-            // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.Filter = "\"Database files |*.db;*.bak;*.zip;*.rar;*.7zip|All files (*.*)|*.*\";";
             // 
             // labelProcessing
             // 
@@ -98,7 +93,6 @@
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.ProgressBar progressBar2;
         private System.Windows.Forms.Button buttonStop;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Label labelProcessing;
     }
 }

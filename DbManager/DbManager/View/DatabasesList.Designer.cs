@@ -55,7 +55,6 @@
             this.buttonUpload = new System.Windows.Forms.Button();
             this.buttonStop = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.tabControl1.SuspendLayout();
             this.tabPageShow.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -369,10 +368,6 @@
             this.progressBar1.Size = new System.Drawing.Size(494, 45);
             this.progressBar1.TabIndex = 8;
             // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.Filter = "\"Database files |*.db;*.bak;*.zip;*.rar;*.7zip|All files (*.*)|*.*\";";
-            // 
             // DatabasesList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -414,7 +409,6 @@
         private System.Windows.Forms.TextBox textBoxFindByInput;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button buttonStop;
         private System.Windows.Forms.Label labelStatus;

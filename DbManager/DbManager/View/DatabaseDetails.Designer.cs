@@ -36,6 +36,9 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.dataGridViewDetails = new System.Windows.Forms.DataGridView();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.UploadDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.UploaderName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -43,9 +46,6 @@
             this.Checksum = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.FileExtension = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.FileSize = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewDetails)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -141,48 +141,6 @@
             this.dataGridViewDetails.TabIndex = 9;
             this.dataGridViewDetails.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewDetails_CellDoubleClick);
             // 
-            // Id
-            // 
-            this.Id.DataPropertyName = "Id";
-            this.Id.HeaderText = "Id";
-            this.Id.Name = "Id";
-            // 
-            // UploadDate
-            // 
-            this.UploadDate.DataPropertyName = "UploadDate";
-            this.UploadDate.HeaderText = "Upload date";
-            this.UploadDate.Name = "UploadDate";
-            // 
-            // UploaderName
-            // 
-            this.UploaderName.DataPropertyName = "UploaderName";
-            this.UploaderName.HeaderText = "Uploader name";
-            this.UploaderName.Name = "UploaderName";
-            // 
-            // PathToFile
-            // 
-            this.PathToFile.DataPropertyName = "PathToFile";
-            this.PathToFile.HeaderText = "PathToFile";
-            this.PathToFile.Name = "PathToFile";
-            // 
-            // Checksum
-            // 
-            this.Checksum.DataPropertyName = "Checksum";
-            this.Checksum.HeaderText = "Checksum";
-            this.Checksum.Name = "Checksum";
-            // 
-            // FileExtension
-            // 
-            this.FileExtension.DataPropertyName = "FileExtension";
-            this.FileExtension.HeaderText = "File extension";
-            this.FileExtension.Name = "FileExtension";
-            // 
-            // FileSize
-            // 
-            this.FileSize.DataPropertyName = "FileSize";
-            this.FileSize.HeaderText = "File size (mb)";
-            this.FileSize.Name = "FileSize";
-            // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 2;
@@ -233,6 +191,49 @@
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 77.83641F));
             this.tableLayoutPanel3.Size = new System.Drawing.Size(525, 379);
             this.tableLayoutPanel3.TabIndex = 19;
+            // 
+            // Id
+            // 
+            this.Id.DataPropertyName = "Id";
+            this.Id.HeaderText = "Id";
+            this.Id.Name = "Id";
+            // 
+            // UploadDate
+            // 
+            this.UploadDate.DataPropertyName = "UploadDate";
+            this.UploadDate.HeaderText = "Upload date";
+            this.UploadDate.Name = "UploadDate";
+            // 
+            // UploaderName
+            // 
+            this.UploaderName.DataPropertyName = "UploaderName";
+            this.UploaderName.HeaderText = "Uploader name";
+            this.UploaderName.Name = "UploaderName";
+            // 
+            // PathToFile
+            // 
+            this.PathToFile.DataPropertyName = "PathToFile";
+            this.PathToFile.HeaderText = "PathToFile";
+            this.PathToFile.Name = "PathToFile";
+            // 
+            // Checksum
+            // 
+            this.Checksum.DataPropertyName = "Checksum";
+            this.Checksum.HeaderText = "Checksum";
+            this.Checksum.Name = "Checksum";
+            // 
+            // FileExtension
+            // 
+            this.FileExtension.DataPropertyName = "FileExtension";
+            this.FileExtension.HeaderText = "File extension";
+            this.FileExtension.Name = "FileExtension";
+            // 
+            // FileSize
+            // 
+            this.FileSize.DataPropertyName = "FileSize";
+            this.FileSize.HeaderText = "File size (mb)";
+            this.FileSize.Name = "FileSize";
+            this.FileSize.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // DatabaseDetails
             // 

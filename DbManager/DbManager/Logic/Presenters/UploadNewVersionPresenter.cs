@@ -3,6 +3,7 @@ using DbManager.Logic.Interfaces;
 using DbManager.Logic.Interfaces.ViewInterfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -87,7 +88,14 @@ namespace DbManager.Logic.Presenters
                 }
 
                 if (!string.IsNullOrEmpty(targetFile))
-                    _metaData.WriteDetails(_id, targetFile, checksumForNewFile);
+                {
+                    FileInfo fileInfo = new FileInfo(targetFile);
+                    string targetFilePath = targetFile;
+                    if (fileInfo.Extension.Equals(".tmp"))
+                        targetFilePath = $"{ Path.GetDirectoryName(targetFile)}\\{Path.GetFileNameWithoutExtension(targetFile)}";
+                    _metaData.WriteDetails(_id, targetFilePath, checksumForNewFile);
+                }
+                    
             }
             catch (Exception ex)
             {

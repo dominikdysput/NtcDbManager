@@ -111,9 +111,29 @@ namespace DbManager.Logic
                 var date = DateTime.Now.ToString("MM/dd/yyyy HH:mm");
                 var upladerName = Environment.UserName;
                 var pathToFile = targetFile;
-                var length = (new System.IO.FileInfo(pathToFile).Length / 1048576).ToString();
-                if (long.Parse(length) < 1)
-                    length = "< 1";
+
+                long length = 0;
+                using (FileStream sourceStream = File.OpenRead(pathToFile))
+                {
+                    length = sourceStream.Length;
+                }
+
+                length = length / 1048576;
+                var lengthToWrite = "";
+                if (length < 1)
+                {
+                    lengthToWrite = "< 1 MB ";
+                }
+                else if (length > 1024)
+                {
+                    var size = length / 1024.0;
+                    lengthToWrite = String.Format("{0:F2} GB", size);
+                }
+                else
+                {
+                    lengthToWrite = $"{length} MB";
+                }
+                   
                 command.CommandText = "INSERT INTO DbDetails (Id, UploadDate, UploaderName, PathToFile, Checksum, FileExtension, FileSize) VALUES(@id ,@date,@uploaderName, @pathToFile, @checksum, @fileExtension, @fileSize)";
                 command.Parameters.AddWithValue("@id", id);
                 command.Parameters.AddWithValue("@date", date);
@@ -121,7 +141,7 @@ namespace DbManager.Logic
                 command.Parameters.AddWithValue("@pathToFile", pathToFile);
                 command.Parameters.AddWithValue("@checksum", checksum);
                 command.Parameters.AddWithValue("@fileExtension", Path.GetExtension(pathToFile));
-                command.Parameters.AddWithValue("@fileSize", length);
+                command.Parameters.AddWithValue("@fileSize", lengthToWrite);
 
                 conn.Open();
                 try

@@ -28,9 +28,9 @@ namespace DbManager
 {
     partial class DatabasesList : Form, IDatabasesListView
     {
-        
+        private readonly IMessageService _messageService;
         private DatabasesListModel model;
-        public DatabasesList()
+        public DatabasesList(IMessageService messageService)
         {
             InitializeComponent();
             progressBar1.Minimum = 0;
@@ -38,6 +38,7 @@ namespace DbManager
             dataGridView1.AutoGenerateColumns = false;
             dataGridView1.Columns["Id"].Visible = false;
             SynchronizationContext = SynchronizationContext.Current;
+            _messageService = messageService;
         }
         public DatabasesListModel Model
         {
@@ -53,7 +54,6 @@ namespace DbManager
         public ICommand Find { get; set; }
         public ICommand GetInfoDatabaseCommand { get; set; }
         public SynchronizationContext SynchronizationContext { get; }
-
         private void SetBindings()
         {
             textBoxCompany.DataBindings.Add("Text", Model, nameof(DatabasesListModel.Company), false, DataSourceUpdateMode.OnPropertyChanged, string.Empty);
@@ -65,17 +65,9 @@ namespace DbManager
             textBoxFindByInput.DataBindings.Add("Text", Model, nameof(DatabasesListModel.FindByInput), false, DataSourceUpdateMode.OnPropertyChanged, string.Empty);
             labelProcessing.DataBindings.Add("Text", Model, nameof(DatabasesListModel.UpdateStatus), false, DataSourceUpdateMode.OnPropertyChanged, string.Empty);
         }
-        private string ShowOpenFileDialog(OpenFileDialog openFileDialog)
-        {
-            if (openFileDialog.ShowDialog() != DialogResult.OK)
-            {
-                return string.Empty;
-            }
-            return openFileDialog.FileName;
-        }
         private async void buttonUpload_Click(object sender, EventArgs e)
         {
-            var pathToFile = ShowOpenFileDialog(openFileDialog1);
+            var pathToFile = _messageService.ShowOpenFileDialog();
             if (!string.IsNullOrEmpty(pathToFile))
                 Model.PathToFile = pathToFile;
             Model.Company = textBoxCompany.Text;
