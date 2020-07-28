@@ -35,6 +35,8 @@ namespace DbManager
             InitializeComponent();
             progressBar1.Minimum = 0;
             progressBar1.Maximum = 100;
+            dataGridView1.AutoGenerateColumns = false;
+            dataGridView1.Columns["Id"].Visible = false;
             SynchronizationContext = SynchronizationContext.Current;
         }
         public DatabasesListModel Model
@@ -67,7 +69,6 @@ namespace DbManager
         {
             if (openFileDialog.ShowDialog() != DialogResult.OK)
             {
-                MessageBox.Show("Cannot add file", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return string.Empty;
             }
             return openFileDialog.FileName;
@@ -82,12 +83,10 @@ namespace DbManager
             Model.Tags = textBoxTags.Text;
             await Upload.Execute();
         }
-        private void FindButton_Click(object sender, EventArgs e)
-        {
-            Find.Execute(null);
-        }
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex == -1)
+                return;
             var id = dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString();
             GetInfoDatabaseCommand.Execute(id);
         }
@@ -105,10 +104,14 @@ namespace DbManager
         }
         bool IDatabasesListView.CheckTextboxesEmpty()
         {
-            if (string.IsNullOrEmpty(Model.Company) || string.IsNullOrEmpty(Model.DatabaseName) || string.IsNullOrEmpty(Model.Tags) ||
-                string.IsNullOrEmpty(Model.PathToFile))
+            if (string.IsNullOrEmpty(Model.Company) || string.IsNullOrEmpty(Model.DatabaseName) || string.IsNullOrEmpty(Model.Tags))
             {
                 MessageBox.Show("Fill all fields", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return true;
+            }
+            if(string.IsNullOrEmpty(Model.PathToFile))
+            {
+                MessageBox.Show("Choose file to upload", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return true;
             }
             ChangeButtonsEnabledStatus();
@@ -131,12 +134,20 @@ namespace DbManager
             buttonUpload.Enabled = !buttonUpload.Enabled;
             buttonStop.Enabled = !buttonStop.Enabled;
             labelProcessing.Visible = !labelProcessing.Visible;
-            progressBar1.Visible = !progressBar1.Visible;
+            progressBar1.Enabled = !progressBar1.Enabled;
             labelStatus.Visible = !labelStatus.Visible;
         }
         private void DatabasesList_Load_1(object sender, EventArgs e)
         {
             Model.ComboboxSelectedItem = 0;
         }
+        private void textBoxFindByInput_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                Find.Execute(null);
+            }
+        }
+
     }
 }

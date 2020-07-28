@@ -53,7 +53,7 @@ namespace DbManager.View
         }
         void IDownloadSelectedVersionView.ShowDialog()
         {
-            ShowDialog();
+            Show();
         }
     }
 }

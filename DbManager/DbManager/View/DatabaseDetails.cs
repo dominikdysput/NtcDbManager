@@ -23,6 +23,9 @@ namespace DbManager.View
         public DatabaseDetails()
         {
             InitializeComponent();
+            dataGridViewDetails.Columns["Id"].Visible = false;
+            dataGridViewDetails.Columns["PathToFile"].Visible = false;
+            dataGridViewDetails.Columns["Checksum"].Visible = false;
         }
         public DatabaseDetailsModel Model
         {
@@ -33,8 +36,8 @@ namespace DbManager.View
                 SetBindings();
             }
         }
-        public ICommand Upload { get; set; }
-        public ICommand Download { get; set; }
+        public IAsyncCommand Upload { get; set; }
+        public IAsyncCommand Download { get; set; }
 
         private void SetBindings()
         {
@@ -45,16 +48,19 @@ namespace DbManager.View
         }
         private void UploadDbButton_Click(object sender, EventArgs e)
         {
-            Upload.Execute(null);
+            Upload.Execute();
         }
         private void dataGridViewDetails_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex == -1)
+                return;
             Model.PathToSource = dataGridViewDetails.Rows[e.RowIndex].Cells[3].Value.ToString();
             Model.Checksum = dataGridViewDetails.Rows[e.RowIndex].Cells[4].Value.ToString();
-            Download.Execute(null);
+            Download.Execute();
         }
         void IDatabaseDetailsView.ShowDialog()
         {
+            dataGridViewDetails.AutoGenerateColumns = false;
             ShowDialog();
         }
         public void CloseDialog()

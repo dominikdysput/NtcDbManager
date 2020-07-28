@@ -5,8 +5,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DbManager.Logic
@@ -18,6 +20,21 @@ namespace DbManager.Logic
         public SqlMetaData(ISqlDatabaseFactory sqlDatabaseFactory)
         {
             _sqlDatabaseFactory = sqlDatabaseFactory;
+        }
+        public DataTable ReadAllDetails()
+        {
+            DataTable table = new DataTable();
+            using (var conn = _sqlDatabaseFactory.GetConnection())
+            {
+                var command = conn.CreateCommand();
+                command.CommandText = "Select * from DbDetails";
+                SqlDataAdapter da = new SqlDataAdapter();
+                using (da = new SqlDataAdapter(command))
+                {
+                    da.Fill(table);
+                }
+            }
+            return table;
         }
         public DataTable ReadDetails(int id)
         {
@@ -91,16 +108,20 @@ namespace DbManager.Logic
                 var checksum = checksumForNewFile;
 
                 var command = conn.CreateCommand();
-                var date = DateTime.Now;
+                var date = DateTime.Now.ToString("MM/dd/yyyy HH:mm");
                 var upladerName = Environment.UserName;
                 var pathToFile = targetFile;
-
-                command.CommandText = "INSERT INTO DbDetails (Id, UploadDate, UploaderName, PathToFile, Checksum) VALUES(@id ,@date,@uploaderName, @pathToFile, @checksum)";
+                var length = (new System.IO.FileInfo(pathToFile).Length / 1048576).ToString();
+                if (long.Parse(length) < 1)
+                    length = "< 1";
+                command.CommandText = "INSERT INTO DbDetails (Id, UploadDate, UploaderName, PathToFile, Checksum, FileExtension, FileSize) VALUES(@id ,@date,@uploaderName, @pathToFile, @checksum, @fileExtension, @fileSize)";
                 command.Parameters.AddWithValue("@id", id);
                 command.Parameters.AddWithValue("@date", date);
                 command.Parameters.AddWithValue("@uploaderName", upladerName);
                 command.Parameters.AddWithValue("@pathToFile", pathToFile);
                 command.Parameters.AddWithValue("@checksum", checksum);
+                command.Parameters.AddWithValue("@fileExtension", Path.GetExtension(pathToFile));
+                command.Parameters.AddWithValue("@fileSize", length);
 
                 conn.Open();
                 try

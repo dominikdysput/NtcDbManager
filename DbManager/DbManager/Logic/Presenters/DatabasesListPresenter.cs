@@ -13,7 +13,7 @@ namespace DbManager.Logic.Presenters
 {
     public class DatabasesListPresenter
     {
-        private string _networkPath = Properties.Settings.Default.NetworkPath + @"\DD_Test\";
+        private string _networkPath = string.Empty;
         private readonly IFormFactory<IDatabasesListView> _formFactory;
         private readonly INetworkConnection _networkConnection;
         private readonly INetworkPathInfo _networkPathInfo;
@@ -45,31 +45,12 @@ namespace DbManager.Logic.Presenters
             _view = _formFactory.CreateDatabasesListForm();
             _resumableFileManager = _fileManager as IResumableFileManager;
             _cancellationTokenSource = new CancellationTokenSource();
+            _networkPath = _networkPathInfo.GetPathNeworkDirectory();
         }
         private void BindCommands()
         {
             _view.Upload = new AsyncCommand(UploadAction);
-            _view.Find = new BaseCommand(new Action(() =>
-            {
-                var tagsToCheck = _view.Model.FindByInput;
-                var findBySelectedItem = _view.Model.ComboboxSelectedItem;
-                var table = _metaData.ReadInfo();
-                DataTable tableFoundValue = new DataTable();
-                tableFoundValue = table.Clone();
-                List<string> tagsFromInput = tagsToCheck.Replace(" ", string.Empty).Split(new char[] { ',', ';' }).ToList();
-                foreach (DataRow tableRow in table.Rows)
-                {
-                    var currentRow = tableRow[findBySelectedItem + 1].ToString();
-
-                    var rowToList = currentRow.Replace(" ", string.Empty).Split(new char[] { ',', ';' }).ToList();
-
-                    if (tagsFromInput.Any(x => rowToList.Any(y => y.ToLower().Contains(x.ToLower()))))
-                    {
-                        tableFoundValue.ImportRow(tableRow);
-                    }
-                }
-                _view.Model.DataTable = tableFoundValue;
-            }));
+            _view.Find = new BaseCommand(FindCommand);
             _view.PauseCommand = new BaseCommand(new Action(() =>
             {
                 _cancellationTokenSource.Cancel();
@@ -88,7 +69,34 @@ namespace DbManager.Logic.Presenters
                 }
             }));
         }
+        public void FindCommand()
+        {
+            var tagsToCheck = _view.Model.FindByInput;
+            var findBySelectedItem = _view.Model.ComboboxSelectedItem;
+            var table = _metaData.ReadInfo();
+            DataTable tableFoundValue = new DataTable();
+            tableFoundValue = table.Clone();
+            if (!string.IsNullOrEmpty(tagsToCheck))
+            {
+                List<string> tagsFromInput = tagsToCheck.Replace(" ", string.Empty).Split(new char[] { ',', ';' }).ToList();
+                foreach (DataRow tableRow in table.Rows)
+                {
+                    var currentRow = tableRow[findBySelectedItem + 1].ToString();
 
+                    var rowToList = currentRow.Replace(" ", string.Empty).Split(new char[] { ',', ';' }).ToList();
+
+                    if (!tagsFromInput.Except(rowToList).Any())
+                    {
+                        tableFoundValue.ImportRow(tableRow);
+                    }
+                }
+                _view.Model.DataTable = tableFoundValue;
+            }
+            else
+            {
+                LoadTable();
+            }
+        }
         private async Task UploadAction()
         {
             if (_view.CheckTextboxesEmpty()) return;
@@ -97,6 +105,7 @@ namespace DbManager.Logic.Presenters
                 _resumableFileManager.ProcessingFinishedDelegate = UploadFinshedDelegateHandler;
                 _resumableFileManager.ProgressbarChangedDelegate = UploadProgressChangedHandler;
                 _resumableFileManager.StatusChangedDelegate = UpdateStatusChangedHandler;
+                _cancellationTokenSource = new CancellationTokenSource();
                 var targetFile = string.Empty;
                 targetFile = await _resumableFileManager.Upload(_view.Model.PathToFile, _networkPath, string.Empty, false, _cancellationTokenSource.Token);
                 if (!string.IsNullOrEmpty(targetFile))
@@ -107,7 +116,6 @@ namespace DbManager.Logic.Presenters
                 }
                 _view.ClearModel();
                 LoadTable();
-                _cancellationTokenSource = new CancellationTokenSource();
             }
             catch (Exception ex)
             {
@@ -133,6 +141,7 @@ namespace DbManager.Logic.Presenters
             }
             else
             {
+                _view.Model.StatusProgressbar = 100;
                 MessageBox.Show("Uploading finished successfully");
             }
         }
@@ -162,16 +171,16 @@ namespace DbManager.Logic.Presenters
                     _view.CloseDialog();
                     return null;
                 }
+                _resumableFileManager.DeleteIncomplitedOldFiles();
                 _view.Model = new Model.DatabasesListModel(_view.SynchronizationContext);
                 LoadTable();
                 BindCommands();
-                _resumableFileManager.DeleteIncomplitedOldFiles();
+                
                 return _view;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-                
             }
             return null;
         }

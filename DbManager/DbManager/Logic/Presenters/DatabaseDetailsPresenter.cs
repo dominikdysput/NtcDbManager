@@ -45,40 +45,43 @@ namespace DbManager.Logic.Presenters
         }
         private void BindCommands()
         {
-            _view.Upload = new BaseCommand(new Action(() =>
+            _view.Upload = new AsyncCommand(UploadAction);
+            _view.Download = new AsyncCommand(DownloadAction);
+        }
+        private async Task UploadAction()
+        {
+            try
             {
-                try
-                {
-                    var myForm = _uploadNewVersionPresenter;
-                    myForm.Init(_id);
-                    myForm.Run();
-                    LoadTable();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-            }));
-            _view.Download = new BaseCommand(new Action(() =>
+                var myForm = _uploadNewVersionPresenter;
+                myForm.Init(_id);
+                await myForm.Run();
+                LoadTable();
+            }
+            catch (Exception ex)
             {
-                try
-                {
-                    var cred = _userAccessCredentials.ReadCredentials();
-                    if (cred == null)
-                        throw new Exception("Cannot to upload file");
-                    _networkConnection.TryConnect(_networkPathInfo.GetNetworkPath(), cred.Login, cred.Password);
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private async Task DownloadAction()
+        {
+            try
+            {
+                var cred = _userAccessCredentials.ReadCredentials();
+                if (cred == null)
+                    throw new Exception("Cannot to upload file");
+                _networkConnection.TryConnect(_networkPathInfo.GetNetworkPath(), cred.Login, cred.Password);
 
-                    var pathToSource = _view.Model.PathToSource;
-                    var checksum = _view.Model.Checksum;
-                    var myForm = _downloadSelectedVersionPresenter;
-                    myForm.Init(pathToSource, checksum);
-                    myForm.Run();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-            }));
+                var pathToSource = _view.Model.PathToSource;
+                var checksum = _view.Model.Checksum;
+                var myForm = _downloadSelectedVersionPresenter;
+                myForm.Init(pathToSource, checksum);
+                await myForm.Run();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
         }
         public void LoadInfo()
         {

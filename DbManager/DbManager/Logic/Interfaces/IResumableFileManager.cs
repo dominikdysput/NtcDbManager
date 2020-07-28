@@ -15,14 +15,15 @@ namespace DbManager.Logic.Interfaces
 
         Task ResumeDownload(string sourceFilePath, string targetFilePath, string checksum,
             bool resumeDownload,
-            CancellationToken? cancellationToken = null);
+            CancellationToken cancellationToken);
         Task<string> ResumeUpload(string sourcePath, string targetFilePath, string checksum,
             bool resumeUpload,
-            CancellationToken? cancellationToken = null);
+            CancellationToken cancellationToken);
         bool CheckInfoFileIsAlreadyDownloaded(string pathToFile, string checksum);
-        void SaveFileInfo(string checksum, long totalBytes, string targetPath);
+        void SaveFileInfo(string checksum, long totalBytes, string targetPath, string fileName);
         string[] LoadFileInfo(string targetFile, string checksum);
         bool IsTheSameSize(string sourcePath, string targetFilePath);
         void DeleteIncomplitedOldFiles();
+        void DeleteRowFromMetaDataFile(string checksum, string tmpFilePath);
     }
 }

@@ -38,7 +38,7 @@
             // labelStatus
             // 
             this.labelStatus.AutoSize = true;
-            this.labelStatus.Location = new System.Drawing.Point(145, 49);
+            this.labelStatus.Location = new System.Drawing.Point(37, 49);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(37, 13);
             this.labelStatus.TabIndex = 4;
@@ -63,12 +63,12 @@
             // 
             // openFileDialog1
             // 
-            this.openFileDialog1.Filter = " \"Database files (*.db)|*.db|All files (*.*)|*.*\";";
+            this.openFileDialog1.Filter = "\"Database files |*.db;*.bak;*.zip;*.rar;*.7zip|All files (*.*)|*.*\";";
             // 
             // labelProcessing
             // 
             this.labelProcessing.AutoSize = true;
-            this.labelProcessing.Location = new System.Drawing.Point(197, 49);
+            this.labelProcessing.Location = new System.Drawing.Point(89, 49);
             this.labelProcessing.Name = "labelProcessing";
             this.labelProcessing.Size = new System.Drawing.Size(19, 13);
             this.labelProcessing.TabIndex = 7;
@@ -83,8 +83,12 @@
             this.Controls.Add(this.buttonStop);
             this.Controls.Add(this.progressBar2);
             this.Controls.Add(this.labelStatus);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "UploadNewVersion";
-            this.Text = "UploadNewVersion";
+            this.ShowIcon = false;
+            this.Text = "NTC DbManager";
             this.ResumeLayout(false);
             this.PerformLayout();
 

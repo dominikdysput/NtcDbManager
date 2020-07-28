@@ -13,8 +13,8 @@ namespace DbManager.Logic.Presenters
 {
     public class UploadNewVersionPresenter
     {
-        private string _pathToFile;
-        private string _networkPath = Properties.Settings.Default.NetworkPath + @"\DD_Test\";
+        private string _pathToFile= string.Empty;
+        private string _networkPath;
         private int _id;
         private IUploadNewVersionView _view;
         private readonly IFormFactory<IUploadNewVersionView> _formFactory;
@@ -23,19 +23,21 @@ namespace DbManager.Logic.Presenters
         private readonly IChecksum _checksum;
         private readonly IFileManager _fileManager;
         private readonly IMessageService _messageService;
+        private readonly INetworkPathInfo _networkPathInfo;
         private readonly IFileValidator _fileValidator;
         private CancellationTokenSource _cancellationTokenSource;
         public UploadNewVersionPresenter(IMetaData metaData, IChecksum checksum, IFileManager fileManager,
-            IMessageService messageService, IFileValidator fileValidator, IFormFactory<IUploadNewVersionView> formFactory, IIoc ioc)
+            IMessageService messageService, IFileValidator fileValidator, IFormFactory<IUploadNewVersionView> formFactory, IIoc ioc, INetworkPathInfo networkPathInfo)
         {
             _formFactory = formFactory;
             _ioc = ioc;
+            _networkPathInfo = networkPathInfo;
             _messageService = messageService;
             _fileValidator = fileValidator;
             _checksum = checksum;
             _metaData = metaData;
             _fileManager = fileManager;
-            _cancellationTokenSource = new CancellationTokenSource();
+            _networkPath = _networkPathInfo.GetPathNeworkDirectory();
         }
         private void BindCommands()
         {
@@ -50,16 +52,12 @@ namespace DbManager.Logic.Presenters
         }
         private void ShowDialogSelectPath()
         {
-            _pathToFile = string.Empty;
             _pathToFile = _messageService.ShowOpenFileDialog();
-            if (string.IsNullOrEmpty(_pathToFile))
-                return;
         }
         private async Task StartUpload()
         {
             try
             {
-                MessageBox.Show("Processing...");
                 var checksumForNewFile = _checksum.CalculateChecksum(_pathToFile);
                 var resumableFileManager = _fileManager as IResumableFileManager;
                 string targetFile = string.Empty;
@@ -67,8 +65,8 @@ namespace DbManager.Logic.Presenters
                 resumableFileManager.ProgressbarChangedDelegate = UploadProgressChangedHandler;
                 resumableFileManager.StatusChangedDelegate = UploadStatusChangedHandler;
                 resumableFileManager.ProcessingFinishedDelegate = UploadFinshedDelegateHandler;
-
-                if (resumableFileManager != null && resumableFileManager.CheckInfoFileIsAlreadyDownloaded(_networkPath, checksumForNewFile))
+                _cancellationTokenSource = new CancellationTokenSource();
+                if (resumableFileManager != null && resumableFileManager.CheckInfoFileIsAlreadyDownloaded(_networkPathInfo.GetPathMetaDataFile(), checksumForNewFile))
                 {
                     bool userDecision = _messageService.CheckUserWantsToResumeUpload();
                     if (userDecision)
@@ -116,6 +114,7 @@ namespace DbManager.Logic.Presenters
             }
             else
             {
+                _view.Model.StatusProgressbar = 100;
                 MessageBox.Show("Uploading finished successfully");
             }
         }
@@ -134,11 +133,11 @@ namespace DbManager.Logic.Presenters
             {
                 BindCommands();
                 _view.Model = new Model.UploadNewVersionModel(_view.SynchronizationContext);
-                _cancellationTokenSource = new CancellationTokenSource();
                 ShowDialogSelectPath();
+                if (string.IsNullOrEmpty(_pathToFile))
+                    return;
                 _view.ShowDialog();
                 await StartUpload();
-
             }
         }
     }

@@ -28,7 +28,6 @@ namespace DbManager.Logic.Presenters
             _fileManager = fileManager;
             _formFactory = formFactory;
             _messageService = messageService;
-            _cancellationTokenSource = new CancellationTokenSource();
         }
         public void Init(string pathToSource, string checksum)
         {
@@ -56,8 +55,7 @@ namespace DbManager.Logic.Presenters
                 resumableFileManager.ProgressbarChangedDelegate = DownloadProgressChangedHandler;
                 resumableFileManager.StatusChangedDelegate = DownloadStatusChangedHandler;
                 resumableFileManager.ProcessingFinishedDelegate = DownloadFinshedDelegateHandler;
-
-                if (resumableFileManager != null && File.Exists(_pathToDownloadLoc))
+                if (resumableFileManager != null && resumableFileManager.CheckInfoFileIsAlreadyDownloaded($"{_pathToDownloadLoc}\\tmpFile.txt", _checksum))
                 {
                     bool userDecision = _messageService.CheckUserWantsToResumeDownload();
                     if (userDecision)
@@ -98,6 +96,7 @@ namespace DbManager.Logic.Presenters
             }
             else
             {
+                _view.Model.StatusProgressbar = 100;
                 MessageBox.Show("Download finished successfully");
             }
         }
@@ -105,15 +104,14 @@ namespace DbManager.Logic.Presenters
         {
             _view.Model.DownloadStatus = $"{totalBytes / 1048576}/{sizeOfFile / 1048576}  MB  {processingSpeed / 1048576} MB/s";
         }
-        public void Run()
+        public async Task Run()
         {
             using (_view = _formFactory.GetForm())
             {
                 BindCommands();
                 _view.Model = new Model.DownloadSelectedVersionModel(_view.SynchronizationContext);
-                _cancellationTokenSource = new CancellationTokenSource();
-                ShowDialogSelectPath();
                 _view.ShowDialog();
+                await ShowDialogSelectPath();
             }
         }
     }

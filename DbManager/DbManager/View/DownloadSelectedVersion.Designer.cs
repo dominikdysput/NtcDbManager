@@ -38,7 +38,7 @@
             // labelStatus
             // 
             this.labelStatus.AutoSize = true;
-            this.labelStatus.Location = new System.Drawing.Point(147, 52);
+            this.labelStatus.Location = new System.Drawing.Point(34, 52);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(37, 13);
             this.labelStatus.TabIndex = 8;
@@ -64,7 +64,7 @@
             // labelProcessing
             // 
             this.labelProcessing.AutoSize = true;
-            this.labelProcessing.Location = new System.Drawing.Point(190, 52);
+            this.labelProcessing.Location = new System.Drawing.Point(77, 52);
             this.labelProcessing.Name = "labelProcessing";
             this.labelProcessing.Size = new System.Drawing.Size(19, 13);
             this.labelProcessing.TabIndex = 11;
@@ -79,8 +79,12 @@
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.buttonPause);
             this.Controls.Add(this.labelStatus);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "DownloadSelectedVersion";
-            this.Text = "DownloadSelectedVersion";
+            this.ShowIcon = false;
+            this.Text = "NTC DbManager";
             this.ResumeLayout(false);
             this.PerformLayout();
 

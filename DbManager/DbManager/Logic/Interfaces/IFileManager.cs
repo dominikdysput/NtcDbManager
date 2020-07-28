@@ -11,9 +11,9 @@ namespace DbManager.Logic
     public interface IFileManager
     {
         Task<string> Upload(string sourcePath, string targetFilePath, string checksum, bool resumeUpload,
-            CancellationToken? cancellationToken = null);
+            CancellationToken cancellationToken);
         Task Download(string sourcePath, string targetPath, string checksum, bool resumeDownload,
-            CancellationToken? cancellationToken = null);
+            CancellationToken cancellationToken);
         void Clean(string targetFilePath);
     }
 }

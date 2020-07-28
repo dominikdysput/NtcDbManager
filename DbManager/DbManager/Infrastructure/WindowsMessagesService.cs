@@ -30,9 +30,9 @@ namespace DbManager.Infrastructure
         public string ShowOpenFileDialog()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Database files |*.db;*.bak;*.zip;*.rar;*.7zip|All files (*.*)|*.*";
             if (openFileDialog.ShowDialog() != DialogResult.OK)
             {
-                MessageBox.Show("Cannot add file", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return string.Empty;
             }
             return openFileDialog.FileName;
@@ -42,7 +42,6 @@ namespace DbManager.Infrastructure
             FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
             if (folderBrowserDialog.ShowDialog() != DialogResult.OK)
             {
-                MessageBox.Show("Cannot add file", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return string.Empty;
             }
             return folderBrowserDialog.SelectedPath;

@@ -15,5 +15,6 @@ namespace DbManager.Logic
         DataTable ReadInfo();
         DataTable GetInfoById(int id);
         DataTable ReadDetails(int id);
+        DataTable ReadAllDetails();
     }
 }
